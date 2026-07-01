@@ -30,9 +30,6 @@ class MrRemoverApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFF101118),
         useMaterial3: true,
-        sliderTheme: const SliderThemeData(
-          showValueIndicator: ShowValueIndicator.onDrag,
-        ),
       ),
       home: const HomeScreen(),
     );
