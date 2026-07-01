@@ -1,48 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'dart:io';
 
-import 'controllers/task_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+
 import 'screens/home_screen.dart';
-import 'services/task_storage_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const SimpleTaskerApp());
+  if (Platform.isWindows) {
+    JustAudioMediaKit.ensureInitialized(linux: false, windows: true);
+  }
+  runApp(const MrRemoverApp());
 }
 
-class SimpleTaskerApp extends StatelessWidget {
-  const SimpleTaskerApp({super.key});
+class MrRemoverApp extends StatelessWidget {
+  const MrRemoverApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create:
-          (_) =>
-              TaskController(SharedPreferencesTaskStorageService())
-                ..loadTasks(),
-      child: MaterialApp(
-        title: 'SimpleTasker',
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.system,
-        theme: _theme(Brightness.light),
-        darkTheme: _theme(Brightness.dark),
-        home: const HomeScreen(),
+    const seed = Color(0xFF6D5EF7);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MR Remover',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: seed,
+          brightness: Brightness.dark,
+          surface: const Color(0xFF171821),
+        ),
+        scaffoldBackgroundColor: const Color(0xFF101118),
+        useMaterial3: true,
+        sliderTheme: const SliderThemeData(
+          showValueIndicator: ShowValueIndicator.always,
+        ),
       ),
-    );
-  }
-
-  ThemeData _theme(Brightness brightness) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xff4f46e5),
-      brightness: brightness,
-    );
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.surface,
-      inputDecorationTheme: const InputDecorationTheme(
-        border: OutlineInputBorder(),
-      ),
+      home: const HomeScreen(),
     );
   }
 }

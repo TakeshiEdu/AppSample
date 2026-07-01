@@ -6,7 +6,7 @@ on:
 jobs:
   build-ios:
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -30,7 +30,18 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Package embedded Python and yt-dlp
+        env:
+          SERIOUS_PYTHON_VERSION: "3.14"
+          SERIOUS_PYTHON_SITE_PACKAGES: ${{ github.workspace }}/build/serious_python/site-packages
+          SERIOUS_PYTHON_APP: ${{ github.workspace }}/build/serious_python/app
+        run: dart run serious_python:main package python_app -p iOS -r -r -r python_app/requirements.txt
+
       - name: Build iOS without codesign
+        env:
+          SERIOUS_PYTHON_VERSION: "3.14"
+          SERIOUS_PYTHON_SITE_PACKAGES: ${{ github.workspace }}/build/serious_python/site-packages
+          SERIOUS_PYTHON_APP: ${{ github.workspace }}/build/serious_python/app
         run: flutter build ios --release --no-codesign
 
       - name: Package unsigned IPA
